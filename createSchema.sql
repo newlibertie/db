@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS nldb
+DROP DATABASE IF EXISTS nldb;
 
 CREATE DATABASE nldb CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-USE nldb
+USE nldb;
 
 CREATE TABLE IF NOT EXISTS users (
 	id VARCHAR(32) NOT NULL
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS voterDisqualification (
 	pollId VARCHAR(32) NOT NULL
 		COMMENT 'refersence to poll.id, populated on creation, never updated',
 	voterId VARCHAR(255) NOT NULL,
-	tsstart TIMESTAMP CURENT_TIMESTAMP NOT NULL
+	tsstart TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		COMMENT 'populated on creation, never updated',
 	tsend TIMESTAMP NULL
 		COMMENT 'updated only if NULL, not populated on creation',
