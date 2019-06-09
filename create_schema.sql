@@ -1,31 +1,25 @@
-DROP DATABASE IF EXISTS nldb;
-
-CREATE DATABASE nldb CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS nldb CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 USE nldb;
 
+
+
 CREATE TABLE IF NOT EXISTS users (
-	id VARCHAR(32) NOT NULL
-		COMMENT 'auto generated at creation time only, never updated',
-	url VARCHAR(255) NOT NULL
-		COMMENT 'user provided at creation time, unique in the table, never updated',
-	name VARCHAR(64) NOT NULL
-		COMMENT 'user provided at creation time, never updated',
 
-	creationTS TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-		COMMENT 'housekeeping field, populated only at creation time, never updated',
-	lastModificationTS TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-		COMMENT 'housekeeping field, populated at creation time and each update time',
-	isActive BOOLEAN DEFAULT True NOT NULL
-		COMMENT 'do not know exact usage, yet'
+    id CHAR(36) PRIMARY KEY COMMENT 'uuid generated at creation time',
 
-	/* possible future fields:
-        audit,
-	payment,
-	abuse,
-	others (may be in another table)
-	*/
+    url VARCHAR(8192) NOT NULL COMMENT 'url pointing to a user page',
+
+    display_name VARCHAR(64) NOT NULL,
+
+    creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+        COMMENT 'populated only at creation time, never updated',
+
+    modification_time TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+        COMMENT 'housekeeping field, populated at creation time and each update time'
 );
+
+
 
 CREATE TABLE IF NOT EXISTS polls (
 	id VARCHAR(32) NOT NULL
@@ -90,7 +84,9 @@ CREATE TABLE IF NOT EXISTS ballots (
 		COMMENT 'populated only on creation, never updated'
 );
 
-CREATE TABLE IF NOT EXISTS voterDisqualification (
+
+
+CREATE TABLE IF NOT EXISTS disqualifications (
 	pollId VARCHAR(32) NOT NULL
 		COMMENT 'refersence to poll.id, populated on creation, never updated',
 	voterId VARCHAR(255) NOT NULL,
@@ -99,7 +95,6 @@ CREATE TABLE IF NOT EXISTS voterDisqualification (
 	tsend TIMESTAMP NULL
 		COMMENT 'updated only if NULL, not populated on creation',
 	reasonstart VARCHAR(255)
-		COMMENT 'populated only on creation, never updated',
-	reasonend VARCHAR(255)
+		COMMENT 'populated only on creation, never updated', 
 		COMMENT 'updated only if NULL, not populated on creation'
 );
