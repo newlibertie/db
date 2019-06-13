@@ -64,28 +64,33 @@ CREATE TABLE IF NOT EXISTS polls (
     poll_choices  VARCHAR(65535)
 );
 
+
 CREATE TABLE IF NOT EXISTS ballots (
-    pollId VARCHAR(32) NOT NULL
-        COMMENT 'reference to poll.id, populated only on creation, never updated',
-    voterURL VARCHAR(255) NOT NULL
-        COMMENT 'populated only on creation, never updated',
-    value JSON  #string json( eg: array of (T, C, D) )
-        COMMENT 'value validated by an interpretor based on poll.type, populated only on creation, never updated',
-    creationTS TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        COMMENT 'populated only on creation, never updated'
+
+    id VARCHAR(36) PRIMARY KEY COMMENT 'uuid (8-4-4-12) generated at creation time',
+
+    poll_id VARCHAR(36) NOT NULL COMMENT 'reference to polls.id',
+
+    voter_url VARCHAR(8192) NOT NULL COMMENT 'url pointing to a user page',
+
+    ballot TEXT NOT NULL COMMENT  'string json( eg: array of (T, C, D) ),  ballot interpretor based on poll.type',
+
+    creation_ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
 
 CREATE TABLE IF NOT EXISTS disqualifications (
-    pollId VARCHAR(32) NOT NULL
-        COMMENT 'refersence to poll.id, populated on creation, never updated',
-    voterId VARCHAR(255) NOT NULL,
-    tsstart TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        COMMENT 'populated on creation, never updated',
-    tsend TIMESTAMP NULL
-        COMMENT 'updated only if NULL, not populated on creation',
-    reasonstart VARCHAR(255)
-        COMMENT 'populated only on creation, never updated',
-        COMMENT 'updated only if NULL, not populated on creation'
+
+    id VARCHAR(36) PRIMARY KEY COMMENT 'uuid (8-4-4-12) generated at creation time',
+
+    poll_id VARCHAR(36) NOT NULL,
+
+    voter_url VARCHAR(8192) NOT NULL COMMENT 'url pointing to a user page',
+
+    start_ts TIMESTAMP NOT NULL COMMENT 'start of ballot disqualification',
+
+    end_ts TIMESTAMP NULL COMMENT 'end of disqualification',
+
+    reason VARCHAR(8192) NOT NULL
 );
