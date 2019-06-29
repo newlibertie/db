@@ -27,15 +27,15 @@ CREATE TABLE IF NOT EXISTS polls (
 
     title VARCHAR(64) NOT NULL,
 
-    tags VARCHAR(65535) NULL  COMMENT "JSON array of tags",
+    tags TEXT NULL COMMENT "JSON array of tags",
 
     -- cryptographic parameters for this poll
 
-    large_prime_p VARCHAR(65535) NOT NULL,
+    large_prime_p VARCHAR(4000) NOT NULL,
 
-    generator_g  VARCHAR(65535) NOT NULL,
+    generator_g  VARCHAR(4000) NOT NULL,
 
-    private_key_s VARCHAR(65535) NOT NULL,
+    private_key_s VARCHAR(4000) NOT NULL,
 
 
     -- creator
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS polls (
     -- operational parameters of this poll
     opening_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    closing_ts TIMESTAMP NOT NULL,
+    closing_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     -- housekeeping
 
@@ -55,13 +55,13 @@ CREATE TABLE IF NOT EXISTS polls (
 
 
     poll_type ENUM(
-              'simple',             -- one choice allowed, choice with maximum votes wins
-              'multiple_choice',    -- select as many as yoo like,  choice with maximum votes wins
-              'instant_runoff'      -- select as many as you like in priority order,  instant runoff
+              'SIMPLE',             -- one choice allowed, choice with maximum votes wins
+              'MULTIPLE_CHOICE',    -- select as many as yoo like,  choice with maximum votes wins
+              'INSTANT_RUNOFF'      -- select as many as you like in priority order,  instant runoff
               ) NOT NULL
-        COMMENT 'an interpreter required per type value to interpret the json in the choices field',
+        COMMENT 'an interpreter required per type value to interpret the json in the poll_spec field',
 
-    poll_choices  VARCHAR(65535)
+    poll_spec TEXT NULL COMMENT 'additional json spec of the poll to be interpreted based on poll type value'
 );
 
 
